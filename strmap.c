@@ -79,6 +79,8 @@ void strmap_partial_clear(struct strmap *map, int free_util)
 	hashmap_partial_clear(&map->map);
 }
 
+extern int strmap_put_calls;
+
 void *strmap_put(struct strmap *map, const char *str, void *data)
 {
 	struct strmap_entry *entry = find_strmap_entry(map, str);
@@ -92,6 +94,7 @@ void *strmap_put(struct strmap *map, const char *str, void *data)
 		 * We won't modify entry->key so it really should be const.
 		 */
 		const char *key = str;
+		++strmap_put_calls;
 
 		entry = map->pool ? mem_pool_alloc(map->pool, sizeof(*entry))
 				  : xmalloc(sizeof(*entry));
